@@ -84,7 +84,7 @@
   .row.my-row{grid-template-columns: 1.7fr 1fr 0.9fr 1fr 0.85fr 0.75fr 1fr 26px;}
   .row.del-row{grid-template-columns: 1.8fr 1fr 1fr 0.9fr 1fr 1fr 26px;}
   .row.boss-row{grid-template-columns: 1.6fr 0.9fr 0.9fr 1fr 0.85fr 0.75fr 1fr 26px;}
-  .row > div{text-align:left;}
+  .row > div{text-align:left;min-width:0;overflow-wrap:anywhere;}
   .row.my-row > div:nth-child(2), .row.my-row > div:nth-child(3), .row.my-row > div:nth-child(5),
   .row.my-row > div:nth-child(6), .row.my-row > div:nth-child(7), .row.my-row > div:nth-child(8){text-align:center;}
   .row.del-row > div:nth-child(3), .row.del-row > div:nth-child(4), .row.del-row > div:nth-child(5),
@@ -184,6 +184,56 @@
     .row:not(.head){border-left:3px solid var(--line);}
     .col-label{display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted);text-transform:uppercase;margin-right:6px;}
   }
+
+  /* ---- urgent banner ---- */
+  .urgent-banner{border:1px solid var(--blocked);background:var(--blocked-soft);border-radius:var(--radius);padding:16px 20px;display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;}
+  .urgent-banner.calm{border-color:var(--done);background:var(--done-soft);}
+  .urgent-banner .ub-text{font-size:13.5px;color:var(--ink);}
+  .urgent-banner .ub-text b{font-weight:700;}
+  .urgent-banner .ub-link{font-family:'IBM Plex Mono',monospace;font-size:11.5px;font-weight:600;color:var(--ink);border:1px solid var(--ink);border-radius:7px;padding:6px 12px;background:#fff;cursor:pointer;white-space:nowrap;}
+  .urgent-banner .ub-link:hover{background:var(--ink);color:#fff;}
+
+  /* ---- clickable company tag ---- */
+  .tag.clickable{cursor:pointer;}
+  .tag.clickable:hover{background:var(--accent);color:#fff;}
+  .sc-company.clickable{cursor:pointer;text-decoration:underline;text-decoration-style:dotted;}
+
+  /* ---- activity ticker ---- */
+  .activity-ticker{margin-top:-10px;margin-bottom:22px;font-size:12px;color:var(--muted);display:flex;flex-direction:column;gap:4px;max-height:60px;overflow-y:auto;}
+  .activity-ticker .at-row{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .activity-ticker .at-row b{color:var(--ink);font-weight:600;}
+  .activity-ticker .at-empty{color:var(--muted);}
+
+  /* ---- note / status modal ---- */
+  .modal-overlay{display:none;position:fixed;inset:0;background:rgba(27,30,35,.45);z-index:50;align-items:center;justify-content:center;padding:20px;}
+  .modal-overlay.active{display:flex;}
+  .modal-box{background:var(--surface);border-radius:14px;padding:22px 24px;max-width:420px;width:100%;}
+  .modal-box h3{margin:0 0 4px;font-family:'Space Grotesk',sans-serif;font-size:17px;}
+  .modal-box .modal-sub{font-size:12.5px;color:var(--muted);margin-bottom:14px;}
+  .modal-box textarea{width:100%;min-height:80px;font-family:'Inter',sans-serif;font-size:13.5px;padding:10px 12px;border-radius:8px;border:1px solid var(--line);background:var(--paper);color:var(--ink);resize:vertical;}
+  .modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:14px;}
+  .modal-btn-secondary{background:none;border:1px solid var(--line);border-radius:8px;padding:9px 14px;font-size:13px;color:var(--muted);cursor:pointer;}
+  .modal-btn-secondary:hover{background:var(--paper);}
+  .task-note{font-size:11.5px;color:var(--muted);margin-top:3px;font-style:italic;}
+
+  /* ---- global search ---- */
+  .global-search-wrap{position:relative;}
+  .global-search-input{font-family:'Inter',sans-serif;font-size:13.5px;padding:10px 14px 10px 36px;border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--ink);width:280px;}
+  .global-search-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);width:15px;height:15px;color:var(--muted);pointer-events:none;}
+  .global-search-results{display:none;position:absolute;top:calc(100% + 6px);left:0;right:0;background:var(--surface);border:1px solid var(--line);border-radius:12px;box-shadow:0 8px 24px rgba(27,30,35,.12);max-height:400px;overflow-y:auto;z-index:40;}
+  .global-search-results.active{display:block;}
+  .gs-group-label{font-family:'IBM Plex Mono',monospace;font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);padding:10px 14px 4px;}
+  .gs-result-item{padding:9px 14px;cursor:pointer;border-top:1px solid var(--line);}
+  .gs-result-item:first-child, .gs-group-label + .gs-result-item{border-top:none;}
+  .gs-result-item:hover{background:var(--paper);}
+  .gs-result-title{font-size:13px;font-weight:600;}
+  .gs-result-meta{font-size:11px;color:var(--muted);margin-top:2px;}
+  .gs-empty{padding:16px 14px;font-size:13px;color:var(--muted);text-align:center;}
+
+  /* ---- company detail page ---- */
+  .company-detail-header{display:flex;align-items:baseline;gap:10px;margin-bottom:20px;}
+  .company-people-chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;}
+  .company-people-chips span{font-size:11.5px;padding:4px 10px;border-radius:20px;background:var(--accent-soft);color:var(--accent);}
 </style>
 </head>
 <body class="centered-setup">
@@ -211,7 +261,14 @@
       <h1>Meeting Summary &amp; Assigned Tasks</h1>
       <p class="subline" id="userSubline">ผู้ใช้งาน: —</p>
     </div>
-    <button class="add-btn" onclick="openAddTaskPage()">+ เพิ่มงานใหม่</button>
+    <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+      <div class="global-search-wrap">
+        <svg class="global-search-icon" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="9" cy="9" r="6.5" stroke="currentColor" stroke-width="1.6"/><path d="M18 18L14 14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        <input type="text" class="global-search-input" id="globalSearchInput" placeholder="ค้นหาทุกอย่าง..." oninput="renderGlobalSearch()" onfocus="renderGlobalSearch()">
+        <div class="global-search-results" id="globalSearchResults"></div>
+      </div>
+      <button class="add-btn" onclick="openAddTaskPage()">+ เพิ่มงานใหม่</button>
+    </div>
   </header>
 
   <div class="view-switch-row">
@@ -220,6 +277,7 @@
       <button class="view-btn" data-view="me" onclick="setView('me')"><span class="vb-dot"></span>Task</button>
     </div>
   </div>
+  <div class="activity-ticker" id="activityTicker"></div>
 
   <div class="layout-grid" id="mainLayoutGrid">
     <div class="main-col">
@@ -242,6 +300,9 @@
         </div>
         <div class="summary-grid" id="summaryGrid"></div>
       </section>
+
+      <!-- ===== Urgent / Overdue banner ===== -->
+      <div class="urgent-banner" id="urgentBanner"></div>
 
       <!-- ===== VIEW: ตัวเอง ===== -->
       <div class="view-panel" id="panelMe">
@@ -345,6 +406,10 @@
         <div class="panel-title">Deadline Calendar<span class="panel-scope" id="scope5"></span></div>
         <div id="deadlineCal"></div>
       </div>
+      <div class="panel">
+        <div class="panel-title">Weekly Digest<span class="panel-scope" id="scope6"></span></div>
+        <div id="weeklyDigest"></div>
+      </div>
     </aside>
   </div>
 
@@ -414,12 +479,31 @@
     </section>
   </div>
 
+  <!-- ===== PAGE: รายละเอียดบริษัท ===== -->
+  <div id="pageCompanyDetail" class="app-page">
+    <button class="back-btn" onclick="closeCompanyDetail()">← กลับ</button>
+    <div id="companyDetailContent"></div>
+  </div>
+
   <footer id="liveFooter" style="margin-top:22px;font-size:12px;color:var(--muted);text-align:center;">เชื่อมต่อกับ Google Sheets ผ่าน n8n — ข้อมูลจะรีเฟรชอัตโนมัติทุก 15 วินาที</footer>
   <div style="text-align:center;margin-top:6px;">
     <a href="#" onclick="forgetConnection(); return false;" style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--muted);text-decoration:underline;">ออกจากระบบ</a>
   </div>
   </div><!-- /#dashboardApp -->
 </div><!-- /.wrap -->
+
+<!-- ===== Note modal (shown when changing task status) ===== -->
+<div class="modal-overlay" id="statusModalOverlay">
+  <div class="modal-box">
+    <h3>เปลี่ยนสถานะงาน</h3>
+    <p class="modal-sub" id="statusModalSub"></p>
+    <textarea id="statusModalNote" placeholder="เพิ่มบันทึก (ไม่บังคับ) เช่น รอลูกค้าตอบกลับอยู่..."></textarea>
+    <div class="modal-actions">
+      <button class="modal-btn-secondary" onclick="closeStatusModal()">ยกเลิก</button>
+      <button class="add-btn" onclick="confirmStatusModal()">บันทึก</button>
+    </div>
+  </div>
+</div>
 
 <script>
 const ME_PLACEHOLDER = "Pond";
@@ -516,7 +600,7 @@ async function pushStatusToSheet(t){
     await fetch(BASE_URL + '/tasks/update', {
       method:'POST',
       headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({id:t.id, status:t.status, progressPct:t.progressPct, lastUpdate:t.lastUpdate})
+      body: JSON.stringify({id:t.id, status:t.status, progressPct:t.progressPct, lastUpdate:t.lastUpdate, note:t.note||'', updatedBy:t.updatedBy||''})
     });
   }catch(err){
     const f = document.getElementById('liveFooter');
@@ -577,7 +661,7 @@ function setView(view){
   document.querySelectorAll('.view-btn').forEach(b=>b.classList.toggle('active', b.dataset.view===view));
   document.getElementById('panelMe').classList.toggle('active', view==='me');
   document.getElementById('panelBoss').classList.toggle('active', view==='boss');
-  ['scope1','scope2','scope3','scope4','scope5'].forEach(id=>{
+  ['scope1','scope2','scope3','scope4','scope5','scope6'].forEach(id=>{
     document.getElementById(id).textContent = view==='me' ? 'ของฉัน' : 'ทีมทั้งหมด';
   });
   renderDashboard();
@@ -608,12 +692,68 @@ function renderSummary(){
 
   grid.innerHTML = filtered.slice().sort((a,b)=>b.date.localeCompare(a.date)).map(m=>`
     <div class="summary-card">
-      <div class="sc-title"><span class="sc-company">${m.company}</span> : ${m.topic}</div>
+      <div class="sc-title"><span class="sc-company clickable" onclick="openCompanyDetail('${String(m.company).replace(/'/g,"\\'")}')">${m.company}</span> : ${m.topic}</div>
       <div class="sc-date">${fmtDateShort(m.date)}</div>
       <div style="margin:6px 0;"><a href="#" onclick="openMeetingDetail('${String(m.id).replace(/'/g,"\\'")}'); return false;" class="detail-link-box">เนื้อหาการประชุม →</a></div>
       <div class="sc-attendees-line"><b>ผู้เข้าประชุม:</b> ${m.attendees.join(', ')}</div>
     </div>
   `).join('');
+}
+
+/* ---------------- Company detail page ---------------- */
+function openCompanyDetail(company){
+  const cMeetings = meetings.filter(m=>m.company===company).sort((a,b)=>b.date.localeCompare(a.date));
+  const cTasks = tasks.filter(t=>t.company===company);
+  const people = [...new Set(cTasks.flatMap(t=>[t.assignee, t.assignedBy]).filter(Boolean))];
+  const doneCount = cTasks.filter(t=>t.status==='done').length;
+
+  const meetingsHtml = cMeetings.length
+    ? cMeetings.map(m=>`
+      <div class="summary-card" style="margin-bottom:10px;">
+        <div class="sc-title">${m.topic}</div>
+        <div class="sc-date">${fmtDateShort(m.date)}</div>
+        <div style="margin:6px 0;"><a href="#" onclick="openMeetingDetail('${String(m.id).replace(/'/g,"\\'")}'); return false;" class="detail-link-box">เนื้อหาการประชุม →</a></div>
+      </div>`).join('')
+    : '<div class="empty">ยังไม่มีการประชุมของบริษัทนี้</div>';
+
+  const tasksHtml = cTasks.length
+    ? `<div class="board"><div class="row head boss-row"><div>Task</div><div>Assignee</div><div>มอบหมายโดย</div><div>บริษัท</div><div>Deadline</div><div>Priority</div><div>Status</div><div></div></div>` +
+      cTasks.map(t=>{
+        const dCls = deadlineClass(t.deadline, t.status);
+        return `<div class="row boss-row">
+          <div><div class="task-name">${t.name}</div></div>
+          <div><span class="plain">${t.assignee}</span></div>
+          <div><span class="plain">${t.assignedBy}</span></div>
+          <div><span class="tag">${t.company}</span></div>
+          <div><span class="deadline ${dCls}">${fmtDate(t.deadline)}</span></div>
+          <div><span class="prio-tag ${t.priority}">${t.priority}</span></div>
+          <div><select class="status ${statusMeta[t.status].css}" onchange="openStatusChangeModal(${t.id}, this.value)">${Object.entries(statusMeta).map(([k,v])=>`<option value="${k}" ${k===t.status?'selected':''}>${v.label}</option>`).join('')}</select></div>
+          <div></div>
+        </div>`;
+      }).join('') + `</div>`
+    : '<div class="empty">ยังไม่มีงานของบริษัทนี้</div>';
+
+  document.getElementById('companyDetailContent').innerHTML = `
+    <div class="company-detail-header">
+      <p class="eyebrow" style="margin:0;">Company</p>
+    </div>
+    <h2 style="font-size:26px;margin-bottom:4px;">${company}</h2>
+    <p class="subline" style="margin-bottom:8px;">${cMeetings.length} การประชุม · ${cTasks.length} งานทั้งหมด · เสร็จแล้ว ${doneCount}</p>
+    <div class="company-people-chips">${people.map(p=>`<span>${p}</span>`).join('')}</div>
+    <div class="md-section-label" style="margin-top:24px;">การประชุม</div>
+    <div class="summary-grid" style="margin-top:8px;">${meetingsHtml}</div>
+    <div class="md-section-label" style="margin-top:24px;">งานทั้งหมด</div>
+    <div style="margin-top:8px;">${tasksHtml}</div>
+  `;
+  document.getElementById('mainLayoutGrid').style.display = 'none';
+  document.getElementById('pageMeetingDetail').style.display = 'none';
+  document.getElementById('pageAddTask').style.display = 'none';
+  document.getElementById('pageCompanyDetail').style.display = 'block';
+  window.scrollTo(0,0);
+}
+function closeCompanyDetail(){
+  document.getElementById('pageCompanyDetail').style.display = 'none';
+  document.getElementById('mainLayoutGrid').style.display = 'grid';
 }
 
 /* ---------------- Meeting detail page ---------------- */
@@ -632,6 +772,7 @@ function openMeetingDetail(meetingId){
     </div>
   `;
   document.getElementById('mainLayoutGrid').style.display = 'none';
+  document.getElementById('pageCompanyDetail').style.display = 'none';
   document.getElementById('pageMeetingDetail').style.display = 'block';
   window.scrollTo(0,0);
 }
@@ -648,6 +789,7 @@ function openAddTaskPage(){
   document.getElementById('fAssignee').value = ME;
   document.getElementById('mainLayoutGrid').style.display = 'none';
   document.getElementById('pageMeetingDetail').style.display = 'none';
+  document.getElementById('pageCompanyDetail').style.display = 'none';
   document.getElementById('pageAddTask').style.display = 'block';
   window.scrollTo(0,0);
 }
@@ -685,14 +827,14 @@ function renderMyTasks(){
     const dCls = deadlineClass(t.deadline, t.status);
     return `
     <div class="row my-row">
-      <div><div class="task-name">${t.name}</div></div>
-      <div><span class="tag">${t.company}</span></div>
+      <div><div class="task-name">${t.name}</div>${t.note ? `<div class="task-note">📝 ${t.note}</div>` : ''}</div>
+      <div><span class="tag clickable" onclick="openCompanyDetail('${String(t.company).replace(/'/g,"\\'")}')">${t.company}</span></div>
       <div>${t.partner ? `<span class="tag partner">${t.partner}</span>` : '<span class="plain" style="color:var(--muted)">—</span>'}</div>
       <div><span class="plain">${t.assignedBy}</span></div>
       <div><span class="deadline ${dCls}">${fmtDate(t.deadline)}</span></div>
       <div><span class="prio-tag ${t.priority}">${t.priority}</span></div>
       <div>
-        <select class="status ${statusMeta[t.status].css}" onchange="setStatus(${t.id}, this.value)">
+        <select class="status ${statusMeta[t.status].css}" onchange="openStatusChangeModal(${t.id}, this.value)">
           ${Object.entries(statusMeta).map(([k,v])=>`<option value="${k}" ${k===t.status?'selected':''}>${v.label}</option>`).join('')}
         </select>
       </div>
@@ -711,12 +853,12 @@ function renderDelegatedTasks(){
     const dCls = deadlineClass(t.deadline, t.status);
     return `
     <div class="row del-row">
-      <div><div class="task-name">${t.name}</div></div>
+      <div><div class="task-name">${t.name}</div>${t.note ? `<div class="task-note">📝 ${t.note}</div>` : ''}</div>
       <div><span class="plain">${t.assignee}</span></div>
-      <div><span class="tag">${t.company}</span></div>
+      <div><span class="tag clickable" onclick="openCompanyDetail('${String(t.company).replace(/'/g,"\\'")}')">${t.company}</span></div>
       <div><span class="deadline ${dCls}">${fmtDate(t.deadline)}</span></div>
       <div>
-        <select class="status ${statusMeta[t.status].css}" onchange="setStatus(${t.id}, this.value)">
+        <select class="status ${statusMeta[t.status].css}" onchange="openStatusChangeModal(${t.id}, this.value)">
           ${Object.entries(statusMeta).map(([k,v])=>`<option value="${k}" ${k===t.status?'selected':''}>${v.label}</option>`).join('')}
         </select>
       </div>
@@ -757,14 +899,14 @@ function renderBossTable(){
     const dCls = deadlineClass(t.deadline, t.status);
     return `
     <div class="row boss-row">
-      <div><div class="task-name">${t.name}</div></div>
+      <div><div class="task-name">${t.name}</div>${t.note ? `<div class="task-note">📝 ${t.note}</div>` : ''}</div>
       <div><span class="plain">${t.assignee}</span></div>
       <div><span class="plain">${t.assignedBy}</span></div>
-      <div><span class="tag">${t.company}</span></div>
+      <div><span class="tag clickable" onclick="openCompanyDetail('${String(t.company).replace(/'/g,"\\'")}')">${t.company}</span></div>
       <div><span class="deadline ${dCls}">${fmtDate(t.deadline)}</span></div>
       <div><span class="prio-tag ${t.priority}">${t.priority}</span></div>
       <div>
-        <select class="status ${statusMeta[t.status].css}" onchange="setStatus(${t.id}, this.value)">
+        <select class="status ${statusMeta[t.status].css}" onchange="openStatusChangeModal(${t.id}, this.value)">
           ${Object.entries(statusMeta).map(([k,v])=>`<option value="${k}" ${k===t.status?'selected':''}>${v.label}</option>`).join('')}
         </select>
       </div>
@@ -901,10 +1043,175 @@ function renderDashboard(){
   renderByPriority(list);
   renderByOwner(list);
   renderCalendar(list);
+  renderWeeklyDigest(list);
 }
 
+/* ---------------- Urgent / Overdue banner ---------------- */
+function renderUrgentBanner(){
+  const el = document.getElementById('urgentBanner');
+  if(!el) return;
+  const overdue = tasks.filter(t=> t.status!=='done' && deadlineClass(t.deadline, t.status)==='overdue');
+  const soon = tasks.filter(t=> t.status!=='done' && deadlineClass(t.deadline, t.status)==='soon');
+  if(overdue.length===0 && soon.length===0){
+    el.className = 'urgent-banner calm';
+    el.innerHTML = `<div class="ub-text">✓ ไม่มีงานเกินกำหนดหรือใกล้ครบตอนนี้</div>`;
+    return;
+  }
+  el.className = 'urgent-banner';
+  const parts = [];
+  if(overdue.length) parts.push(`<b>${overdue.length} งานเกินกำหนด</b>`);
+  if(soon.length) parts.push(`<b>${soon.length} งานใกล้ครบใน 2 วัน</b>`);
+  el.innerHTML = `
+    <div class="ub-text">⚠️ ${parts.join(' · ')}</div>
+    <button class="ub-link" onclick="jumpToUrgentTasks()">ดูรายการ →</button>
+  `;
+}
+function jumpToUrgentTasks(){
+  setView('boss');
+  document.getElementById('bossStatus').value = '';
+  renderBossTable();
+  document.querySelector('#panelBoss')?.scrollIntoView({behavior:'smooth'});
+}
+
+/* ---------------- Activity ticker (best-effort — needs UpdatedBy column in Sheet for full detail) ---------------- */
+function relativeDay(dateStr){
+  if(!dateStr) return '';
+  const dt = new Date(dateStr+"T00:00:00");
+  if(isNaN(dt.getTime())) return '';
+  const diff = Math.round((todayStr()-dt)/86400000);
+  if(diff<=0) return 'วันนี้';
+  if(diff===1) return 'เมื่อวาน';
+  return `${diff} วันที่แล้ว`;
+}
+function renderActivityTicker(){
+  const el = document.getElementById('activityTicker');
+  if(!el) return;
+  const recent = tasks.filter(t=>t.lastUpdate).slice().sort((a,b)=>b.lastUpdate.localeCompare(a.lastUpdate)).slice(0,6);
+  if(recent.length===0){ el.innerHTML = '<div class="at-empty">ยังไม่มีความเคลื่อนไหว</div>'; return; }
+  el.innerHTML = recent.map(t=>{
+    const who = t.updatedBy ? t.updatedBy : t.assignee;
+    return `<div class="at-row"><b>${who}</b> อัปเดต "${t.name}" เป็น ${statusMeta[t.status] ? statusMeta[t.status].label : t.status} · ${relativeDay(t.lastUpdate)}</div>`;
+  }).join('');
+}
+
+/* ---------------- Weekly digest ---------------- */
+function isoWeekKey(dateStr){
+  const dt = new Date(dateStr+"T00:00:00");
+  if(isNaN(dt.getTime())) return null;
+  const d = new Date(Date.UTC(dt.getFullYear(), dt.getMonth(), dt.getDate()));
+  const dayNum = d.getUTCDay() || 7;
+  d.setUTCDate(d.getUTCDate() + 4 - dayNum);
+  const yearStart = new Date(Date.UTC(d.getUTCFullYear(),0,1));
+  const weekNo = Math.ceil((((d-yearStart)/86400000) + 1)/7);
+  return `${d.getUTCFullYear()}-W${weekNo}`;
+}
+function renderWeeklyDigest(list){
+  const el = document.getElementById('weeklyDigest');
+  if(!el) return;
+  const thisWeek = isoWeekKey(new Date().toISOString().slice(0,10));
+  const lastWeekDate = new Date(); lastWeekDate.setDate(lastWeekDate.getDate()-7);
+  const lastWeek = isoWeekKey(lastWeekDate.toISOString().slice(0,10));
+
+  const doneThisWeek = list.filter(t=>t.status==='done' && isoWeekKey(t.lastUpdate)===thisWeek).length;
+  const doneLastWeek = list.filter(t=>t.status==='done' && isoWeekKey(t.lastUpdate)===lastWeek).length;
+  const diff = doneThisWeek - doneLastWeek;
+  const trend = diff>0 ? `▲ +${diff} จากสัปดาห์ก่อน` : diff<0 ? `▼ ${diff} จากสัปดาห์ก่อน` : '= เท่ากับสัปดาห์ก่อน';
+  const trendColor = diff>0 ? 'var(--done)' : diff<0 ? 'var(--blocked)' : 'var(--muted)';
+
+  el.innerHTML = `
+    <div style="display:flex;justify-content:space-between;align-items:baseline;">
+      <div>
+        <div style="font-family:'Space Grotesk',sans-serif;font-size:26px;font-weight:700;">${doneThisWeek}</div>
+        <div style="font-size:11px;color:var(--muted);">งานเสร็จสัปดาห์นี้</div>
+      </div>
+      <div style="text-align:right;font-size:11.5px;color:${trendColor};font-weight:600;">${trend}</div>
+    </div>
+    <div style="font-size:11px;color:var(--muted);margin-top:8px;">สัปดาห์ก่อน: ${doneLastWeek} งาน</div>
+  `;
+}
+
+/* ---------------- Global search ---------------- */
+function closeGlobalSearch(){
+  const box = document.getElementById('globalSearchResults');
+  if(box) box.classList.remove('active');
+}
+function renderGlobalSearch(){
+  const q = document.getElementById('globalSearchInput').value.trim().toLowerCase();
+  const box = document.getElementById('globalSearchResults');
+  if(!q){ box.classList.remove('active'); box.innerHTML=''; return; }
+
+  const meetingHits = meetings.filter(m=>
+    m.topic.toLowerCase().includes(q) || m.company.toLowerCase().includes(q) || m.attendees.join(' ').toLowerCase().includes(q)
+  ).slice(0,5);
+  const taskHits = tasks.filter(t=>
+    t.name.toLowerCase().includes(q) || t.company.toLowerCase().includes(q) || t.assignee.toLowerCase().includes(q) || t.assignedBy.toLowerCase().includes(q)
+  ).slice(0,6);
+
+  if(meetingHits.length===0 && taskHits.length===0){
+    box.innerHTML = '<div class="gs-empty">ไม่พบผลลัพธ์</div>';
+    box.classList.add('active');
+    return;
+  }
+
+  let html = '';
+  if(meetingHits.length){
+    html += `<div class="gs-group-label">การประชุม</div>`;
+    html += meetingHits.map(m=>`
+      <div class="gs-result-item" onclick="closeGlobalSearch(); openMeetingDetail('${String(m.id).replace(/'/g,"\\'")}')">
+        <div class="gs-result-title">${m.company} : ${m.topic}</div>
+        <div class="gs-result-meta">${fmtDateShort(m.date)}</div>
+      </div>`).join('');
+  }
+  if(taskHits.length){
+    html += `<div class="gs-group-label">งาน</div>`;
+    html += taskHits.map(t=>`
+      <div class="gs-result-item" onclick="closeGlobalSearch(); jumpToTask('${String(t.id)}')">
+        <div class="gs-result-title">${t.name}</div>
+        <div class="gs-result-meta">${t.company} · ${t.assignee} · ${statusMeta[t.status] ? statusMeta[t.status].label : t.status}</div>
+      </div>`).join('');
+  }
+  box.innerHTML = html;
+  box.classList.add('active');
+}
+function jumpToTask(taskId){
+  const t = tasks.find(x=>String(x.id)===String(taskId));
+  if(!t) return;
+  setView('boss');
+  document.getElementById('bossSearch').value = t.name;
+  renderBossTable();
+  document.querySelector('#panelBoss')?.scrollIntoView({behavior:'smooth'});
+}
+document.addEventListener('click', (e)=>{
+  const wrap = document.querySelector('.global-search-wrap');
+  if(wrap && !wrap.contains(e.target)) closeGlobalSearch();
+});
+
 /* ---------------- actions (persist to Google Sheets via n8n) ---------------- */
-function setStatus(id, newStatus){
+let pendingStatusChange = null; // {id, newStatus}
+
+function openStatusChangeModal(id, newStatus){
+  const t = tasks.find(x=>x.id==id);
+  if(!t) return;
+  pendingStatusChange = {id, newStatus};
+  document.getElementById('statusModalSub').textContent = `${t.name} → ${statusMeta[newStatus].label}`;
+  document.getElementById('statusModalNote').value = '';
+  document.getElementById('statusModalOverlay').classList.add('active');
+  setTimeout(()=>document.getElementById('statusModalNote').focus(), 50);
+}
+function closeStatusModal(){
+  document.getElementById('statusModalOverlay').classList.remove('active');
+  pendingStatusChange = null;
+  renderAll(); // re-render to reset any <select> that was changed but not confirmed
+}
+function confirmStatusModal(){
+  if(!pendingStatusChange) return;
+  const note = document.getElementById('statusModalNote').value.trim();
+  setStatus(pendingStatusChange.id, pendingStatusChange.newStatus, note);
+  document.getElementById('statusModalOverlay').classList.remove('active');
+  pendingStatusChange = null;
+}
+
+function setStatus(id, newStatus, note){
   const t = tasks.find(x=>x.id==id);
   if(!t) return;
   t.status = newStatus;
@@ -912,6 +1219,8 @@ function setStatus(id, newStatus){
   else if(newStatus==='todo') t.progressPct = 0;
   else if(!t.progressPct) t.progressPct = 30;
   t.lastUpdate = new Date().toISOString().slice(0,10);
+  if(note) t.note = note;
+  t.updatedBy = ME;
   renderAll();
   pushStatusToSheet(t);
 }
@@ -923,14 +1232,14 @@ function deleteTask(id){
   renderAll();
 }
 
-// addTask() replaced by openAddTaskPage()/submitAddTaskForm() — see the Add Task page section above.
-
 function renderAll(){
   renderSummary();
   renderMyTasks();
   renderDelegatedTasks();
   renderBossTable();
   renderDashboard();
+  renderUrgentBanner();
+  renderActivityTicker();
 }
 // Rendering starts only after connect() successfully loads live data — see the setup card.
 </script>
