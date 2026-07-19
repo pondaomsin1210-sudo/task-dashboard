@@ -72,6 +72,8 @@
   .summary-card .sc-date{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--muted);margin-bottom:10px;}
   .sc-attendees-line{font-size:12.5px;color:var(--muted);line-height:1.5;}
   .sc-attendees-line b{color:var(--ink);font-weight:600;}
+  .detail-link-box{display:inline-block;font-size:12px;font-weight:600;color:var(--accent);text-decoration:none;border:1px solid var(--accent);border-radius:7px;padding:5px 10px;background:var(--accent-soft);transition:background .12s ease;}
+  .detail-link-box:hover{background:var(--accent);color:#fff;}
 
   /* ---- boards / tables ---- */
   .board{border:1px solid var(--line);border-radius:12px;overflow:hidden;}
@@ -82,6 +84,14 @@
   .row.my-row{grid-template-columns: 1.7fr 1fr 0.9fr 1fr 0.85fr 0.75fr 1fr 26px;}
   .row.del-row{grid-template-columns: 1.8fr 1fr 1fr 0.9fr 1fr 1fr 26px;}
   .row.boss-row{grid-template-columns: 1.6fr 0.9fr 0.9fr 1fr 0.85fr 0.75fr 1fr 26px;}
+  .row > div{text-align:left;}
+  .row.my-row > div:nth-child(2), .row.my-row > div:nth-child(3), .row.my-row > div:nth-child(5),
+  .row.my-row > div:nth-child(6), .row.my-row > div:nth-child(7), .row.my-row > div:nth-child(8){text-align:center;}
+  .row.del-row > div:nth-child(3), .row.del-row > div:nth-child(4), .row.del-row > div:nth-child(5),
+  .row.del-row > div:nth-child(6), .row.del-row > div:nth-child(7){text-align:center;}
+  .row.boss-row > div:nth-child(4), .row.boss-row > div:nth-child(5), .row.boss-row > div:nth-child(6),
+  .row.boss-row > div:nth-child(7), .row.boss-row > div:nth-child(8){text-align:center;}
+  .row select.status{margin:0 auto;}
 
   .task-name{font-weight:600;font-size:13.5px;}
   .tag{display:inline-block;font-size:11px;font-family:'IBM Plex Mono',monospace;padding:3px 7px;border-radius:6px;background:var(--accent-soft);color:var(--accent);white-space:nowrap;}
@@ -198,7 +208,7 @@
   <header>
     <div>
       <p class="eyebrow">Dashboard</p>
-      <h1>สรุปการประชุมและงานที่ได้รับมอบหมาย</h1>
+      <h1>Meeting Summary &amp; Assigned Tasks</h1>
       <p class="subline" id="userSubline">ผู้ใช้งาน: —</p>
     </div>
     <button class="add-btn" onclick="openAddTaskPage()">+ เพิ่มงานใหม่</button>
@@ -209,7 +219,6 @@
       <button class="view-btn active" data-view="boss" onclick="setView('boss')"><span class="vb-dot"></span>All</button>
       <button class="view-btn" data-view="me" onclick="setView('me')"><span class="vb-dot"></span>Task</button>
     </div>
-    <span class="view-caption" id="viewCaption">แสดงเฉพาะงานของ Pond</span>
   </div>
 
   <div class="layout-grid" id="mainLayoutGrid">
@@ -240,8 +249,8 @@
         <section>
           <div class="section-head">
             <div>
-              <p class="eyebrow">My Tasks</p>
-              <h2>งานของฉัน</h2>
+              <p class="eyebrow" style="font-size:12px;">งานของฉัน</p>
+              <h2 style="font-size:26px;">My Tasks</h2>
               <p class="subline">แสดงเฉพาะงานของเรา</p>
             </div>
           </div>
@@ -283,8 +292,8 @@
         <section>
           <div class="section-head">
             <div>
-              <p class="eyebrow">All Team Tasks</p>
-              <h2>งานของทีมทั้งหมด</h2>
+              <p class="eyebrow" style="font-size:12px;">งานของทีมทั้งหมด</p>
+              <h2 style="font-size:26px;">All Team Tasks</h2>
               <p class="subline">เห็นงานของทุกคน ไม่ว่าใครเป็นคนรับผิดชอบ</p>
             </div>
           </div>
@@ -544,6 +553,12 @@ function fmtDate(d){
   if(isNaN(dt.getTime())){ return 'ยังไม่ระบุ'; }
   return dt.toLocaleDateString('th-TH',{day:'2-digit',month:'short'});
 }
+function fmtDateShort(d){
+  if(!d || typeof d !== 'string' || d.trim()===''){ return 'ยังไม่ระบุ'; }
+  const dt = new Date(d+"T00:00:00");
+  if(isNaN(dt.getTime())){ return 'ยังไม่ระบุ'; }
+  return dt.toLocaleDateString('th-TH',{day:'2-digit',month:'short',year:'2-digit'});
+}
 function todayStr(){ const n=new Date(); n.setHours(0,0,0,0); return n; }
 function deadlineClass(d, status){
   if(status==="done") return "";
@@ -562,9 +577,6 @@ function setView(view){
   document.querySelectorAll('.view-btn').forEach(b=>b.classList.toggle('active', b.dataset.view===view));
   document.getElementById('panelMe').classList.toggle('active', view==='me');
   document.getElementById('panelBoss').classList.toggle('active', view==='boss');
-  document.getElementById('viewCaption').textContent = view==='me'
-    ? `แสดงเฉพาะงานของ ${ME}`
-    : `แสดงงานของทุกคนในทีม (${tasks.length} งานทั้งหมด)`;
   ['scope1','scope2','scope3','scope4','scope5'].forEach(id=>{
     document.getElementById(id).textContent = view==='me' ? 'ของฉัน' : 'ทีมทั้งหมด';
   });
@@ -597,8 +609,8 @@ function renderSummary(){
   grid.innerHTML = filtered.slice().sort((a,b)=>b.date.localeCompare(a.date)).map(m=>`
     <div class="summary-card">
       <div class="sc-title"><span class="sc-company">${m.company}</span> : ${m.topic}</div>
-      <div class="sc-date">${fmtDate(m.date)} · ${new Date(m.date+"T00:00:00").toLocaleDateString('th-TH',{year:'numeric'})}</div>
-      <div style="margin:6px 0;"><a href="#" onclick="openMeetingDetail('${String(m.id).replace(/'/g,"\\'")}'); return false;" style="font-size:12.5px;color:var(--accent);text-decoration:underline;">เนื้อหาการประชุม →</a></div>
+      <div class="sc-date">${fmtDateShort(m.date)}</div>
+      <div style="margin:6px 0;"><a href="#" onclick="openMeetingDetail('${String(m.id).replace(/'/g,"\\'")}'); return false;" class="detail-link-box">เนื้อหาการประชุม →</a></div>
       <div class="sc-attendees-line"><b>ผู้เข้าประชุม:</b> ${m.attendees.join(', ')}</div>
     </div>
   `).join('');
@@ -614,7 +626,7 @@ function openMeetingDetail(meetingId){
   document.getElementById('meetingDetailContent').innerHTML = `
     <div class="meeting-detail-card">
       <h2><span class="md-company">${m.company}</span> : ${m.topic}</h2>
-      <div class="md-meta">${fmtDate(m.date)} · ${new Date(m.date+"T00:00:00").toLocaleDateString('th-TH',{year:'numeric'})} &nbsp;·&nbsp; ผู้เข้าประชุม: ${m.attendees.join(', ')}</div>
+      <div class="md-meta">${fmtDateShort(m.date)} &nbsp;·&nbsp; ผู้เข้าประชุม: ${m.attendees.join(', ')}</div>
       <div class="md-section-label">เนื้อหาการประชุม</div>
       <div class="md-body">${body}</div>
     </div>
@@ -673,14 +685,13 @@ function renderMyTasks(){
     const dCls = deadlineClass(t.deadline, t.status);
     return `
     <div class="row my-row">
-      <div><span class="col-label">Task</span><div class="task-name">${t.name}</div></div>
-      <div><span class="col-label">บริษัท</span><span class="tag">${t.company}</span></div>
-      <div><span class="col-label">Partner</span>${t.partner ? `<span class="tag partner">${t.partner}</span>` : '<span class="plain" style="color:var(--muted)">—</span>'}</div>
-      <div><span class="col-label">ผู้มอบหมาย</span><span class="plain">${t.assignedBy}</span></div>
-      <div><span class="col-label">Deadline</span><span class="deadline ${dCls}">${fmtDate(t.deadline)}</span></div>
-      <div><span class="col-label">Priority</span><span class="prio-tag ${t.priority}">${t.priority}</span></div>
+      <div><div class="task-name">${t.name}</div></div>
+      <div><span class="tag">${t.company}</span></div>
+      <div>${t.partner ? `<span class="tag partner">${t.partner}</span>` : '<span class="plain" style="color:var(--muted)">—</span>'}</div>
+      <div><span class="plain">${t.assignedBy}</span></div>
+      <div><span class="deadline ${dCls}">${fmtDate(t.deadline)}</span></div>
+      <div><span class="prio-tag ${t.priority}">${t.priority}</span></div>
       <div>
-        <span class="col-label">Status</span>
         <select class="status ${statusMeta[t.status].css}" onchange="setStatus(${t.id}, this.value)">
           ${Object.entries(statusMeta).map(([k,v])=>`<option value="${k}" ${k===t.status?'selected':''}>${v.label}</option>`).join('')}
         </select>
@@ -700,17 +711,16 @@ function renderDelegatedTasks(){
     const dCls = deadlineClass(t.deadline, t.status);
     return `
     <div class="row del-row">
-      <div><span class="col-label">งาน</span><div class="task-name">${t.name}</div></div>
-      <div><span class="col-label">มอบหมายให้</span><span class="plain">${t.assignee}</span></div>
-      <div><span class="col-label">บริษัท</span><span class="tag">${t.company}</span></div>
-      <div><span class="col-label">Deadline</span><span class="deadline ${dCls}">${fmtDate(t.deadline)}</span></div>
+      <div><div class="task-name">${t.name}</div></div>
+      <div><span class="plain">${t.assignee}</span></div>
+      <div><span class="tag">${t.company}</span></div>
+      <div><span class="deadline ${dCls}">${fmtDate(t.deadline)}</span></div>
       <div>
-        <span class="col-label">Status</span>
         <select class="status ${statusMeta[t.status].css}" onchange="setStatus(${t.id}, this.value)">
           ${Object.entries(statusMeta).map(([k,v])=>`<option value="${k}" ${k===t.status?'selected':''}>${v.label}</option>`).join('')}
         </select>
       </div>
-      <div><span class="col-label">Last Update</span><span class="last-update">${fmtDate(t.lastUpdate)}</span></div>
+      <div><span class="last-update">${fmtDate(t.lastUpdate)}</span></div>
       <div><button class="del-btn" title="ลบงานนี้" onclick="deleteTask(${t.id})">✕</button></div>
     </div>`;
   }).join('');
@@ -747,14 +757,13 @@ function renderBossTable(){
     const dCls = deadlineClass(t.deadline, t.status);
     return `
     <div class="row boss-row">
-      <div><span class="col-label">Task</span><div class="task-name">${t.name}</div></div>
-      <div><span class="col-label">Assignee</span><span class="plain">${t.assignee}</span></div>
-      <div><span class="col-label">มอบหมายโดย</span><span class="plain">${t.assignedBy}</span></div>
-      <div><span class="col-label">บริษัท</span><span class="tag">${t.company}</span></div>
-      <div><span class="col-label">Deadline</span><span class="deadline ${dCls}">${fmtDate(t.deadline)}</span></div>
-      <div><span class="col-label">Priority</span><span class="prio-tag ${t.priority}">${t.priority}</span></div>
+      <div><div class="task-name">${t.name}</div></div>
+      <div><span class="plain">${t.assignee}</span></div>
+      <div><span class="plain">${t.assignedBy}</span></div>
+      <div><span class="tag">${t.company}</span></div>
+      <div><span class="deadline ${dCls}">${fmtDate(t.deadline)}</span></div>
+      <div><span class="prio-tag ${t.priority}">${t.priority}</span></div>
       <div>
-        <span class="col-label">Status</span>
         <select class="status ${statusMeta[t.status].css}" onchange="setStatus(${t.id}, this.value)">
           ${Object.entries(statusMeta).map(([k,v])=>`<option value="${k}" ${k===t.status?'selected':''}>${v.label}</option>`).join('')}
         </select>
