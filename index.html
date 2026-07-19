@@ -8,7 +8,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root{
-    --paper:#F6F4EF; --surface:#FFFFFF; --ink:#1B1E23; --muted:#767B85; --line:#E4E1D8;
+    --paper:#EEF4EF; --surface:#FFFFFF; --ink:#1B1E23; --muted:#71807A; --line:#D9E6DC;
     --accent:#2B5D5A; --accent-soft:#E3EEED;
     --todo:#9AA0A8; --progress:#C97A2B; --progress-soft:#F6E7D6;
     --done:#2E7D4F; --done-soft:#DFEEE3;
@@ -1096,7 +1096,7 @@ function relativeDay(dateStr){
 function renderActivityTicker(){
   const el = document.getElementById('activityTicker');
   if(!el) return;
-  const recent = tasks.filter(t=>t.lastUpdate).slice().sort((a,b)=>b.lastUpdate.localeCompare(a.lastUpdate)).slice(0,3);
+  const recent = tasks.filter(t=>t.lastUpdate).slice().sort((a,b)=>b.lastUpdate.localeCompare(a.lastUpdate)).slice(0,1);
   if(recent.length===0){ el.innerHTML = '<div class="at-empty">ยังไม่มีความเคลื่อนไหว</div>'; return; }
   el.innerHTML = recent.map(t=>{
     const who = t.updatedBy ? t.updatedBy : t.assignee;
