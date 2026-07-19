@@ -20,6 +20,8 @@
   *{box-sizing:border-box;}
   body{margin:0;background:var(--paper);color:var(--ink);font-family:'Inter',sans-serif;-webkit-font-smoothing:antialiased;}
   .wrap{max-width:1400px;margin:0 auto;padding:32px 28px 80px;}
+  body.centered-setup{display:flex;align-items:center;justify-content:center;min-height:100vh;}
+  body.centered-setup .wrap{max-width:480px;padding:20px;width:100%;}
 
   header{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;margin-bottom:18px;flex-wrap:wrap;}
   .eyebrow{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 4px;}
@@ -56,6 +58,9 @@
   select.filter{cursor:pointer;}
   input.filter{min-width:190px;}
   .search-input{font-family:'Inter',sans-serif;font-size:13px;padding:8px 12px;border-radius:8px;border:1px solid var(--line);background:var(--paper);color:var(--ink);width:220px;}
+  .search-wrap{position:relative;display:inline-flex;align-items:center;}
+  .search-icon{position:absolute;left:10px;width:14px;height:14px;color:var(--muted);pointer-events:none;}
+  .search-with-icon{padding-left:32px !important;}
   .table-title-row{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap;}
   .board-title{font-family:'IBM Plex Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);}
 
@@ -130,9 +135,9 @@
   .legend-dot.done{background:var(--done);}.legend-dot.blocked{background:var(--blocked);}
 
   .cal-month-label{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:13.5px;margin-bottom:10px;}
-  .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;}
+  .cal-grid{display:grid;grid-template-columns:repeat(7, minmax(0,1fr));gap:3px;width:100%;box-sizing:border-box;}
   .cal-wd{font-family:'IBM Plex Mono',monospace;font-size:9.5px;color:var(--muted);text-align:center;padding-bottom:2px;}
-  .cal-cell{aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:11px;border-radius:6px;position:relative;background:var(--paper);}
+  .cal-cell{aspect-ratio:1;min-width:0;box-sizing:border-box;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:10.5px;border-radius:6px;position:relative;background:var(--paper);}
   .cal-cell.empty{background:transparent;}
   .cal-cell.today{background:var(--accent-soft);font-weight:700;color:var(--accent);}
   .cal-dot{width:5px;height:5px;border-radius:50%;margin-top:2px;}
@@ -140,6 +145,20 @@
   .cal-dot.done{background:var(--done);}.cal-dot.blocked{background:var(--blocked);}
 
   footer{margin-top:22px;font-size:12px;color:var(--muted);text-align:center;}
+
+  .app-page{display:none;max-width:900px;margin:0 auto;}
+  .app-page.active{display:block;}
+  .back-btn{background:none;border:1px solid var(--line);border-radius:8px;padding:8px 14px;font-family:'Inter',sans-serif;font-size:13px;color:var(--ink);cursor:pointer;margin-bottom:18px;}
+  .back-btn:hover{background:var(--accent-soft);border-color:var(--accent);}
+  .form-field{margin-bottom:14px;}
+  .form-field label{display:block;font-family:'IBM Plex Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:6px;}
+  .form-field input, .form-field select{width:100%;font-family:'Inter',sans-serif;font-size:14px;padding:10px 12px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--ink);}
+  .meeting-detail-card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:26px 28px;max-width:720px;margin:0 auto;}
+  .meeting-detail-card .md-company{color:var(--accent);}
+  .meeting-detail-card h2{margin:0 0 6px;font-size:22px;}
+  .meeting-detail-card .md-meta{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--muted);margin-bottom:18px;}
+  .meeting-detail-card .md-section-label{font-family:'IBM Plex Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:18px 0 6px;}
+  .meeting-detail-card .md-body{font-size:14px;line-height:1.7;white-space:pre-wrap;}
   footer b{color:var(--ink);}
 
   .view-panel{display:none;}
@@ -157,20 +176,19 @@
   }
 </style>
 </head>
-<body>
+<body class="centered-setup">
 <div class="wrap">
 
-  <div class="setup-card" id="setupCard" style="background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:26px 28px;margin-bottom:20px;">
+  <div class="setup-card" id="setupCard" style="background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:26px 28px;">
     <p class="eyebrow">Setup</p>
-    <h1 style="margin-bottom:6px;">เชื่อมต่อกับ Google Sheets</h1>
-    <p class="subline" style="margin-bottom:14px;">กรอก Webhook Base URL จาก n8n และชื่อของคุณ — ระบบจะดึงข้อมูลใหม่ทุก 15 วินาทีอัตโนมัติ</p>
+    <h1 style="margin-bottom:18px;">เชื่อมต่อกับ Google Sheets</h1>
     <div style="margin-bottom:12px;">
-      <label style="display:block;font-family:'IBM Plex Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:6px;">n8n Webhook Base URL</label>
-      <input type="text" id="baseUrlInput" class="filter" style="width:100%;" placeholder="https://your-n8n-instance.com/webhook">
+      <label style="display:block;font-family:'IBM Plex Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:6px;">Base URL</label>
+      <input type="text" id="baseUrlInput" class="filter" style="width:100%;" value="https://regionalteam.bifrostconnect.co.th/webhook" placeholder="https://regionalteam.bifrostconnect.co.th/webhook">
     </div>
     <div style="margin-bottom:14px;">
-      <label style="display:block;font-family:'IBM Plex Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:6px;">คุณคือใคร (สำหรับกรอง My Tasks)</label>
-      <input type="text" id="meInput" class="filter" style="width:100%;" placeholder="เช่น Pond">
+      <label style="display:block;font-family:'IBM Plex Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:6px;">Discord Name</label>
+      <input type="text" id="meInput" class="filter" style="width:100%;" placeholder="เช่น pattyju">
     </div>
     <button class="add-btn" onclick="connect()">เชื่อมต่อและเข้าใช้งาน</button>
     <div id="connStatus" style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:var(--muted);margin-top:10px;"></div>
@@ -180,41 +198,44 @@
   <header>
     <div>
       <p class="eyebrow">Dashboard</p>
-      <h1>ภาพรวมงานที่มอบหมาย</h1>
-      <p class="subline">สรุปการประชุม, งานของฉัน, งานที่มอบหมายให้คนอื่น — อัปเดตสด</p>
+      <h1>สรุปการประชุมและงานที่ได้รับมอบหมาย</h1>
+      <p class="subline" id="userSubline">ผู้ใช้งาน: —</p>
     </div>
-    <button class="add-btn" onclick="addTask()">+ เพิ่มงานใหม่</button>
+    <button class="add-btn" onclick="openAddTaskPage()">+ เพิ่มงานใหม่</button>
   </header>
 
   <div class="view-switch-row">
     <div class="view-switch">
-      <button class="view-btn active" data-view="me" onclick="setView('me')"><span class="vb-dot"></span>มุมมองของฉัน</button>
-      <button class="view-btn" data-view="boss" onclick="setView('boss')"><span class="vb-dot"></span>มุมมองหัวหน้า — ดูได้ทุกคน</button>
+      <button class="view-btn active" data-view="boss" onclick="setView('boss')"><span class="vb-dot"></span>All</button>
+      <button class="view-btn" data-view="me" onclick="setView('me')"><span class="vb-dot"></span>Task</button>
     </div>
     <span class="view-caption" id="viewCaption">แสดงเฉพาะงานของ Pond</span>
   </div>
 
-  <div class="layout-grid">
+  <div class="layout-grid" id="mainLayoutGrid">
     <div class="main-col">
 
       <!-- ===== Summary (shared, ทั้งสองมุมมอง) ===== -->
       <section>
         <div class="section-head">
           <div>
-            <p class="eyebrow">Summary</p>
-            <h2>สรุปการประชุม</h2>
+            <p class="eyebrow" style="font-size:12px;">สรุปการประชุม</p>
+            <h2 style="font-size:26px;">Summary</h2>
           </div>
         </div>
         <div class="filters">
           <input type="date" class="filter" id="summaryDate" onchange="renderSummary()">
           <select class="filter" id="summaryCompany" onchange="renderSummary()"><option value="">ทุกบริษัท</option></select>
-          <input type="text" class="filter" id="summarySearch" placeholder="ค้นหาหัวข้อ / ผู้เข้าประชุม..." oninput="renderSummary()">
+          <div class="search-wrap">
+            <svg class="search-icon" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="9" cy="9" r="6.5" stroke="currentColor" stroke-width="1.6"/><path d="M18 18L14 14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+            <input type="text" class="filter search-with-icon" id="summarySearch" placeholder="ค้นหาหัวข้อ / ผู้เข้าประชุม..." oninput="renderSummary()">
+          </div>
         </div>
         <div class="summary-grid" id="summaryGrid"></div>
       </section>
 
       <!-- ===== VIEW: ตัวเอง ===== -->
-      <div class="view-panel active" id="panelMe">
+      <div class="view-panel" id="panelMe">
 
         <section>
           <div class="section-head">
@@ -226,7 +247,10 @@
           </div>
           <div class="table-title-row">
             <span class="board-title">รายการงานทั้งหมด</span>
-            <input type="text" class="search-input" id="myTaskSearch" placeholder="ค้นหางาน..." oninput="renderMyTasks()">
+            <div class="search-wrap">
+              <svg class="search-icon" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="9" cy="9" r="6.5" stroke="currentColor" stroke-width="1.6"/><path d="M18 18L14 14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+              <input type="text" class="search-input search-with-icon" id="myTaskSearch" placeholder="ค้นหางาน..." oninput="renderMyTasks()">
+            </div>
           </div>
           <div class="board">
             <div class="row head my-row">
@@ -239,9 +263,9 @@
         <section>
           <div class="section-head">
             <div>
-              <p class="eyebrow">Delegated Tasks</p>
-              <h2>งานที่เรามอบหมายให้คนอื่น</h2>
-              <p class="legend-line">เห็นทันทีว่า <b>ใครทำอยู่</b> · <b>ใครยังไม่เริ่ม</b> · <b>ใครเกินกำหนด</b></p>
+              <p class="eyebrow" style="font-size:12px;">งานที่มอบหมาย</p>
+              <h2 style="font-size:26px;">Delegated Tasks</h2>
+              <p class="legend-line">Real Time</p>
             </div>
           </div>
           <div class="board">
@@ -255,7 +279,7 @@
       </div>
 
       <!-- ===== VIEW: หัวหน้า (เห็นทุกคน) ===== -->
-      <div class="view-panel" id="panelBoss">
+      <div class="view-panel active" id="panelBoss">
         <section>
           <div class="section-head">
             <div>
@@ -274,7 +298,10 @@
               <option value="done">Done</option>
               <option value="blocked">Blocked</option>
             </select>
-            <input type="text" class="search-input" id="bossSearch" placeholder="ค้นหางาน..." oninput="renderBossTable()">
+            <div class="search-wrap">
+              <svg class="search-icon" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="9" cy="9" r="6.5" stroke="currentColor" stroke-width="1.6"/><path d="M18 18L14 14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+              <input type="text" class="search-input search-with-icon" id="bossSearch" placeholder="ค้นหางาน..." oninput="renderBossTable()">
+            </div>
           </div>
           <div class="board">
             <div class="row head boss-row">
@@ -312,9 +339,75 @@
     </aside>
   </div>
 
+  <!-- ===== PAGE: รายละเอียดการประชุม ===== -->
+  <div id="pageMeetingDetail" class="app-page">
+    <button class="back-btn" onclick="closeMeetingDetail()">← กลับ</button>
+    <div id="meetingDetailContent"></div>
+  </div>
+
+  <!-- ===== PAGE: เพิ่มงานใหม่ ===== -->
+  <div id="pageAddTask" class="app-page">
+    <button class="back-btn" onclick="closeAddTaskPage()">← กลับ</button>
+    <section style="max-width:560px;margin:0 auto;">
+      <p class="eyebrow">Add Task</p>
+      <h2 style="margin-bottom:18px;">เพิ่มงานใหม่</h2>
+      <form id="addTaskForm" onsubmit="submitAddTaskForm(event)">
+        <div class="form-field">
+          <label>งาน</label>
+          <input type="text" id="fTaskName" required placeholder="ชื่องาน">
+        </div>
+        <div class="form-field">
+          <label>มอบหมายให้</label>
+          <input type="text" id="fAssignee" required placeholder="ชื่อคน (พิมพ์ชื่อของคุณเองถ้าเป็นงานตัวเอง)">
+        </div>
+        <div class="form-field">
+          <label>บริษัท</label>
+          <input type="text" id="fCompany" placeholder="เช่น Luna Mansion Hotel">
+        </div>
+        <div class="form-field">
+          <label>Deadline</label>
+          <input type="date" id="fDeadline">
+        </div>
+        <div class="form-field">
+          <label>Status</label>
+          <select id="fStatus">
+            <option value="todo">To do</option>
+            <option value="progress">In progress</option>
+            <option value="done">Done</option>
+            <option value="blocked">Blocked</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label>Last Update</label>
+          <input type="date" id="fLastUpdate">
+        </div>
+        <details style="margin:14px 0;">
+          <summary style="cursor:pointer;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;">เพิ่มเติม (Partner / ผู้มอบหมาย / Priority)</summary>
+          <div class="form-field" style="margin-top:12px;">
+            <label>Partner</label>
+            <input type="text" id="fPartner" placeholder="เว้นว่างได้">
+          </div>
+          <div class="form-field">
+            <label>ผู้มอบหมาย (assignedBy)</label>
+            <input type="text" id="fAssignedBy" placeholder="ใครเป็นคนสั่งงานนี้">
+          </div>
+          <div class="form-field">
+            <label>Priority</label>
+            <select id="fPriority">
+              <option value="Medium" selected>Medium</option>
+              <option value="High">High</option>
+              <option value="Low">Low</option>
+            </select>
+          </div>
+        </details>
+        <button type="submit" class="add-btn" style="width:100%;margin-top:8px;">บันทึกไปยัง Google Sheets</button>
+      </form>
+    </section>
+  </div>
+
   <footer id="liveFooter" style="margin-top:22px;font-size:12px;color:var(--muted);text-align:center;">เชื่อมต่อกับ Google Sheets ผ่าน n8n — ข้อมูลจะรีเฟรชอัตโนมัติทุก 15 วินาที</footer>
   <div style="text-align:center;margin-top:6px;">
-    <a href="#" onclick="forgetConnection(); return false;" style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--muted);text-decoration:underline;">เปลี่ยนผู้ใช้งาน / ล้างการเชื่อมต่อที่บันทึกไว้</a>
+    <a href="#" onclick="forgetConnection(); return false;" style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--muted);text-decoration:underline;">ออกจากระบบ</a>
   </div>
   </div><!-- /#dashboardApp -->
 </div><!-- /.wrap -->
@@ -324,7 +417,7 @@ const ME_PLACEHOLDER = "Pond";
 let ME = "Pond";
 let BASE_URL = "";
 let pollTimer = null;
-let currentView = "me"; // 'me' | 'boss'
+let currentView = "boss"; // 'boss' | 'me'
 
 let tasks = [];
 let meetings = [];
@@ -349,9 +442,11 @@ async function connect(){
       localStorage.setItem('taskDashboard_baseUrl', BASE_URL);
       localStorage.setItem('taskDashboard_me', ME);
     }catch(e){ /* localStorage unavailable — will just need to re-enter next time */ }
+    document.body.classList.remove('centered-setup');
     document.getElementById('setupCard').style.display = 'none';
     document.getElementById('dashboardApp').style.display = 'block';
-    setView('me');
+    document.getElementById('userSubline').textContent = 'ผู้ใช้งาน: ' + ME;
+    setView('boss');
     renderAll();
     startPolling();
   }catch(err){
@@ -503,9 +598,66 @@ function renderSummary(){
     <div class="summary-card">
       <div class="sc-title"><span class="sc-company">${m.company}</span> : ${m.topic}</div>
       <div class="sc-date">${fmtDate(m.date)} · ${new Date(m.date+"T00:00:00").toLocaleDateString('th-TH',{year:'numeric'})}</div>
+      <div style="margin:6px 0;"><a href="#" onclick="openMeetingDetail('${String(m.id).replace(/'/g,"\\'")}'); return false;" style="font-size:12.5px;color:var(--accent);text-decoration:underline;">เนื้อหาการประชุม →</a></div>
       <div class="sc-attendees-line"><b>ผู้เข้าประชุม:</b> ${m.attendees.join(', ')}</div>
     </div>
   `).join('');
+}
+
+/* ---------------- Meeting detail page ---------------- */
+function openMeetingDetail(meetingId){
+  const m = meetings.find(x=>String(x.id)===String(meetingId));
+  if(!m) return;
+  const body = m.summary && m.summary.trim()
+    ? m.summary
+    : 'ยังไม่มีเนื้อหาการประชุมแบบเต็มบันทึกไว้ — ต้องเพิ่มคอลัมน์ Summary ในชีต Meetings และ map เข้าใน n8n ก่อน ตอนนี้มีแค่หัวข้อสั้นๆ กับผู้เข้าร่วมเท่านั้น';
+  document.getElementById('meetingDetailContent').innerHTML = `
+    <div class="meeting-detail-card">
+      <h2><span class="md-company">${m.company}</span> : ${m.topic}</h2>
+      <div class="md-meta">${fmtDate(m.date)} · ${new Date(m.date+"T00:00:00").toLocaleDateString('th-TH',{year:'numeric'})} &nbsp;·&nbsp; ผู้เข้าประชุม: ${m.attendees.join(', ')}</div>
+      <div class="md-section-label">เนื้อหาการประชุม</div>
+      <div class="md-body">${body}</div>
+    </div>
+  `;
+  document.getElementById('mainLayoutGrid').style.display = 'none';
+  document.getElementById('pageMeetingDetail').style.display = 'block';
+  window.scrollTo(0,0);
+}
+function closeMeetingDetail(){
+  document.getElementById('pageMeetingDetail').style.display = 'none';
+  document.getElementById('mainLayoutGrid').style.display = 'grid';
+}
+
+/* ---------------- Add Task page ---------------- */
+function openAddTaskPage(){
+  document.getElementById('addTaskForm').reset();
+  const today = new Date().toISOString().slice(0,10);
+  document.getElementById('fLastUpdate').value = today;
+  document.getElementById('fAssignee').value = ME;
+  document.getElementById('mainLayoutGrid').style.display = 'none';
+  document.getElementById('pageMeetingDetail').style.display = 'none';
+  document.getElementById('pageAddTask').style.display = 'block';
+  window.scrollTo(0,0);
+}
+function closeAddTaskPage(){
+  document.getElementById('pageAddTask').style.display = 'none';
+  document.getElementById('mainLayoutGrid').style.display = 'grid';
+}
+async function submitAddTaskForm(evt){
+  evt.preventDefault();
+  const name = document.getElementById('fTaskName').value.trim();
+  const assignee = document.getElementById('fAssignee').value.trim() || ME;
+  const company = document.getElementById('fCompany').value.trim() || 'Internal';
+  const deadline = document.getElementById('fDeadline').value || '';
+  const status = document.getElementById('fStatus').value;
+  const lastUpdate = document.getElementById('fLastUpdate').value || new Date().toISOString().slice(0,10);
+  const partner = document.getElementById('fPartner').value.trim();
+  const assignedByField = document.getElementById('fAssignedBy').value.trim();
+  const assignedBy = assignedByField || (assignee === ME ? 'ตัวเอง' : ME);
+  const priority = document.getElementById('fPriority').value;
+  if(!name){ return; }
+  await pushNewTaskToSheet({ name, company, partner, assignee, assignedBy, deadline, priority, status, lastUpdate });
+  closeAddTaskPage();
 }
 
 /* ---------------- My Tasks (มุมมองของฉัน) ---------------- */
@@ -762,21 +914,7 @@ function deleteTask(id){
   renderAll();
 }
 
-function addTask(){
-  const name = prompt("ชื่องาน:");
-  if(!name) return;
-  const company = prompt("บริษัท:", "Internal") || "Internal";
-  const partner = prompt("Partner (เว้นว่างได้):", "") || "";
-  const assignee = prompt("มอบหมายให้ใคร (พิมพ์ '" + ME + "' ถ้าเป็นงานของตัวเอง):", ME) || ME;
-  const priority = (prompt("Priority (High / Medium / Low):", "Medium") || "Medium").trim();
-  const priorityFixed = ["High","Medium","Low"].includes(priority) ? priority : "Medium";
-  const deadline = prompt("Deadline (YYYY-MM-DD):", new Date().toISOString().slice(0,10)) || new Date().toISOString().slice(0,10);
-  let assignedBy = ME;
-  if(assignee === ME){
-    assignedBy = prompt("มอบหมายโดยใคร:", "ตัวเอง") || "ตัวเอง";
-  }
-  pushNewTaskToSheet({ name, company, partner, assignee, assignedBy, deadline, priority: priorityFixed });
-}
+// addTask() replaced by openAddTaskPage()/submitAddTaskForm() — see the Add Task page section above.
 
 function renderAll(){
   renderSummary();
