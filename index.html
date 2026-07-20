@@ -761,7 +761,7 @@ function openCompanyDetail(company){
           <div><span class="tag">${t.company}</span></div>
           <div><span class="deadline ${dCls}">${fmtDate(t.deadline)}</span></div>
           <div><span class="prio-tag ${t.priority}">${t.priority}</span></div>
-          <div><select class="status ${statusMeta[t.status].css}" onchange="openStatusChangeModal(${t.id}, this.value)">${Object.entries(statusMeta).map(([k,v])=>`<option value="${k}" ${k===t.status?'selected':''}>${v.label}</option>`).join('')}</select></div>
+          <div><select class="status ${statusMeta[t.status].css}" onchange="openStatusChangeModal('${t.id}', this.value)">${Object.entries(statusMeta).map(([k,v])=>`<option value="${k}" ${k===t.status?'selected':''}>${v.label}</option>`).join('')}</select></div>
           <div></div>
         </div>`;
       }).join('') + `</div>`
@@ -871,11 +871,11 @@ function renderMyTasks(){
       <div><span class="deadline ${dCls}">${fmtDate(t.deadline)}</span></div>
       <div><span class="prio-tag ${t.priority}">${t.priority}</span></div>
       <div>
-        <select class="status ${statusMeta[t.status].css}" onchange="openStatusChangeModal(${t.id}, this.value)">
+        <select class="status ${statusMeta[t.status].css}" onchange="openStatusChangeModal('${t.id}', this.value)">
           ${Object.entries(statusMeta).map(([k,v])=>`<option value="${k}" ${k===t.status?'selected':''}>${v.label}</option>`).join('')}
         </select>
       </div>
-      <div><button class="del-btn" title="ลบงานนี้" onclick="deleteTask(${t.id})">✕</button></div>
+      <div><button class="del-btn" title="ลบงานนี้" onclick="deleteTask('${t.id}')">✕</button></div>
     </div>`;
   }).join('');
 }
@@ -895,12 +895,12 @@ function renderDelegatedTasks(){
       <div><span class="tag clickable" onclick="openCompanyDetail('${String(t.company).replace(/'/g,"\\'")}')">${t.company}</span></div>
       <div><span class="deadline ${dCls}">${fmtDate(t.deadline)}</span></div>
       <div>
-        <select class="status ${statusMeta[t.status].css}" onchange="openStatusChangeModal(${t.id}, this.value)">
+        <select class="status ${statusMeta[t.status].css}" onchange="openStatusChangeModal('${t.id}', this.value)">
           ${Object.entries(statusMeta).map(([k,v])=>`<option value="${k}" ${k===t.status?'selected':''}>${v.label}</option>`).join('')}
         </select>
       </div>
       <div><span class="last-update">${fmtDate(t.lastUpdate)}</span></div>
-      <div><button class="del-btn" title="ลบงานนี้" onclick="deleteTask(${t.id})">✕</button></div>
+      <div><button class="del-btn" title="ลบงานนี้" onclick="deleteTask('${t.id}')">✕</button></div>
     </div>`;
   }).join('');
 }
@@ -943,11 +943,11 @@ function renderBossTable(){
       <div><span class="deadline ${dCls}">${fmtDate(t.deadline)}</span></div>
       <div><span class="prio-tag ${t.priority}">${t.priority}</span></div>
       <div>
-        <select class="status ${statusMeta[t.status].css}" onchange="openStatusChangeModal(${t.id}, this.value)">
+        <select class="status ${statusMeta[t.status].css}" onchange="openStatusChangeModal('${t.id}', this.value)">
           ${Object.entries(statusMeta).map(([k,v])=>`<option value="${k}" ${k===t.status?'selected':''}>${v.label}</option>`).join('')}
         </select>
       </div>
-      <div><button class="del-btn" title="ลบงานนี้" onclick="deleteTask(${t.id})">✕</button></div>
+      <div><button class="del-btn" title="ลบงานนี้" onclick="deleteTask('${t.id}')">✕</button></div>
     </div>`;
   }).join('');
 }
@@ -1113,8 +1113,8 @@ function urgentTaskRowHtml(t, tagClass){
     <div><span class="tag clickable" onclick="openCompanyDetail('${String(t.company).replace(/'/g,"\\'")}')">${t.company}</span></div>
     <div><span class="deadline ${dCls}">${fmtDate(t.deadline)}</span></div>
     <div><span class="prio-tag ${t.priority}">${t.priority}</span></div>
-    <div><select class="status ${statusMeta[t.status].css}" onchange="openStatusChangeModal(${t.id}, this.value)">${Object.entries(statusMeta).map(([k,v])=>`<option value="${k}" ${k===t.status?'selected':''}>${v.label}</option>`).join('')}</select></div>
-    <div><button class="del-btn" title="ลบงานนี้" onclick="deleteTask(${t.id})">✕</button></div>
+    <div><select class="status ${statusMeta[t.status].css}" onchange="openStatusChangeModal('${t.id}', this.value)">${Object.entries(statusMeta).map(([k,v])=>`<option value="${k}" ${k===t.status?'selected':''}>${v.label}</option>`).join('')}</select></div>
+    <div><button class="del-btn" title="ลบงานนี้" onclick="deleteTask('${t.id}')">✕</button></div>
   </div>`;
 }
 
