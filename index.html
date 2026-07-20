@@ -494,6 +494,12 @@
     <div id="companyDetailContent"></div>
   </div>
 
+  <!-- ===== PAGE: งานเกินกำหนด / ใกล้ครบกำหนด ===== -->
+  <div id="pageUrgentTasks" class="app-page">
+    <button class="back-btn" onclick="closeUrgentTasks()">← กลับ</button>
+    <div id="urgentTasksContent"></div>
+  </div>
+
   <footer id="liveFooter" style="margin-top:22px;font-size:12px;color:var(--muted);text-align:center;">เชื่อมต่อกับ Google Sheets ผ่าน n8n — ข้อมูลจะรีเฟรชอัตโนมัติทุก 15 วินาที</footer>
   <div style="text-align:center;margin-top:6px;">
     <a href="#" onclick="forgetConnection(); return false;" style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--muted);text-decoration:underline;">ออกจากระบบ</a>
@@ -524,6 +530,24 @@ let currentView = "boss"; // 'boss' | 'me'
 let tasks = [];
 let meetings = [];
 
+/* ---------------- Name normalization (Discord name / misheard name → real team name) ----------------
+   ข้อมูลงานในชีตถูกแปลงเป็นชื่อไทยจริงแล้ว (ผ่าน Fix Team Names ใน n8n) — ตรงนี้ทำให้ตอน login
+   จะพิมพ์ชื่อ Discord เดิม หรือชื่อไทย ก็จับคู่ My Tasks / Delegated Tasks ได้ถูกต้องเหมือนกัน
+   เพิ่มชื่อ/นามแฝงใหม่ที่นี่ได้เรื่อยๆ ถ้าเจอเพิ่ม */
+const NAME_ALIASES = {
+  'pattyju': 'แพต',
+  'เพชร': 'แพต',
+  'pondaomsin_25360': 'ปอนด์',
+  'pondaomsin': 'ปอนด์',
+  'ปอน': 'ปอนด์',
+  'ปลอด': 'ปอนด์',
+};
+function normalizeName(name){
+  if(!name) return name;
+  const trimmed = name.trim();
+  return NAME_ALIASES[trimmed] || trimmed;
+}
+
 /* ---------------- Live data connection (n8n + Google Sheets) ---------------- */
 function setConnStatus(msg, cls){
   const el = document.getElementById('connStatus');
@@ -534,7 +558,7 @@ function setConnStatus(msg, cls){
 
 async function connect(){
   BASE_URL = document.getElementById('baseUrlInput').value.trim().replace(/\/$/,'');
-  ME = document.getElementById('meInput').value.trim() || ME_PLACEHOLDER;
+  ME = normalizeName(document.getElementById('meInput').value.trim() || ME_PLACEHOLDER);
   if(!BASE_URL){ setConnStatus('กรอก n8n Webhook Base URL ก่อนครับ', 'err'); return; }
 
   setConnStatus('กำลังเชื่อมต่อ...', '');
@@ -758,6 +782,7 @@ function openCompanyDetail(company){
   document.getElementById('mainLayoutGrid').style.display = 'none';
   document.getElementById('pageMeetingDetail').style.display = 'none';
   document.getElementById('pageAddTask').style.display = 'none';
+  document.getElementById('pageUrgentTasks').style.display = 'none';
   document.getElementById('pageCompanyDetail').style.display = 'block';
   window.scrollTo(0,0);
 }
@@ -783,6 +808,7 @@ function openMeetingDetail(meetingId){
   `;
   document.getElementById('mainLayoutGrid').style.display = 'none';
   document.getElementById('pageCompanyDetail').style.display = 'none';
+  document.getElementById('pageUrgentTasks').style.display = 'none';
   document.getElementById('pageMeetingDetail').style.display = 'block';
   window.scrollTo(0,0);
 }
@@ -800,6 +826,7 @@ function openAddTaskPage(){
   document.getElementById('mainLayoutGrid').style.display = 'none';
   document.getElementById('pageMeetingDetail').style.display = 'none';
   document.getElementById('pageCompanyDetail').style.display = 'none';
+  document.getElementById('pageUrgentTasks').style.display = 'none';
   document.getElementById('pageAddTask').style.display = 'block';
   window.scrollTo(0,0);
 }
@@ -1073,14 +1100,56 @@ function renderUrgentBanner(){
   if(soon.length) parts.push(`<b>${soon.length} งานใกล้ครบใน 2 วัน</b>`);
   el.innerHTML = `
     <div class="ub-text">⚠️ ${parts.join(' · ')}</div>
-    <button class="ub-link" onclick="jumpToUrgentTasks()">ดูรายการ →</button>
+    <button class="ub-link" onclick="openUrgentTasksPage()">ดูรายการ →</button>
   `;
 }
-function jumpToUrgentTasks(){
-  setView('boss');
-  document.getElementById('bossStatus').value = '';
-  renderBossTable();
-  document.querySelector('#panelBoss')?.scrollIntoView({behavior:'smooth'});
+
+function urgentTaskRowHtml(t, tagClass){
+  const dCls = deadlineClass(t.deadline, t.status);
+  return `<div class="row boss-row">
+    <div><div class="task-name">${t.name}</div>${t.note ? `<div class="task-note">📝 ${t.note}</div>` : ''}</div>
+    <div><span class="plain">${t.assignee}</span></div>
+    <div><span class="plain">${t.assignedBy}</span></div>
+    <div><span class="tag clickable" onclick="openCompanyDetail('${String(t.company).replace(/'/g,"\\'")}')">${t.company}</span></div>
+    <div><span class="deadline ${dCls}">${fmtDate(t.deadline)}</span></div>
+    <div><span class="prio-tag ${t.priority}">${t.priority}</span></div>
+    <div><select class="status ${statusMeta[t.status].css}" onchange="openStatusChangeModal(${t.id}, this.value)">${Object.entries(statusMeta).map(([k,v])=>`<option value="${k}" ${k===t.status?'selected':''}>${v.label}</option>`).join('')}</select></div>
+    <div><button class="del-btn" title="ลบงานนี้" onclick="deleteTask(${t.id})">✕</button></div>
+  </div>`;
+}
+
+function openUrgentTasksPage(){
+  const overdue = tasks.filter(t=> t.status!=='done' && deadlineClass(t.deadline, t.status)==='overdue');
+  const soon = tasks.filter(t=> t.status!=='done' && deadlineClass(t.deadline, t.status)==='soon');
+
+  const headerRow = `<div class="row head boss-row"><div>Task</div><div>Assignee</div><div>มอบหมายโดย</div><div>บริษัท</div><div>Deadline</div><div>Priority</div><div>Status</div><div></div></div>`;
+
+  const overdueHtml = overdue.length
+    ? `<div class="board">${headerRow}${overdue.map(t=>urgentTaskRowHtml(t)).join('')}</div>`
+    : '<div class="empty">ไม่มีงานเกินกำหนด</div>';
+  const soonHtml = soon.length
+    ? `<div class="board">${headerRow}${soon.map(t=>urgentTaskRowHtml(t)).join('')}</div>`
+    : '<div class="empty">ไม่มีงานใกล้ครบกำหนด</div>';
+
+  document.getElementById('urgentTasksContent').innerHTML = `
+    <p class="eyebrow" style="margin:0;">Urgent</p>
+    <h2 style="font-size:26px;margin-bottom:4px;">งานเกินกำหนด / ใกล้ครบกำหนด</h2>
+    <p class="subline" style="margin-bottom:20px;">${overdue.length} งานเกินกำหนด · ${soon.length} งานใกล้ครบใน 2 วัน</p>
+    <div class="md-section-label" style="color:var(--blocked);">🔴 เกินกำหนดแล้ว</div>
+    <div style="margin-top:8px;margin-bottom:24px;">${overdueHtml}</div>
+    <div class="md-section-label" style="color:var(--progress);">🟠 ใกล้ครบใน 2 วัน</div>
+    <div style="margin-top:8px;">${soonHtml}</div>
+  `;
+  document.getElementById('mainLayoutGrid').style.display = 'none';
+  document.getElementById('pageMeetingDetail').style.display = 'none';
+  document.getElementById('pageAddTask').style.display = 'none';
+  document.getElementById('pageCompanyDetail').style.display = 'none';
+  document.getElementById('pageUrgentTasks').style.display = 'block';
+  window.scrollTo(0,0);
+}
+function closeUrgentTasks(){
+  document.getElementById('pageUrgentTasks').style.display = 'none';
+  document.getElementById('mainLayoutGrid').style.display = 'grid';
 }
 
 /* ---------------- Activity ticker (best-effort — needs UpdatedBy column in Sheet for full detail) ---------------- */
